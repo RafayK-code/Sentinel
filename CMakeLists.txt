@@ -7,7 +7,13 @@ add_subdirectory(external/spdlog)
 
 set(SOURCES 
     src/main.cpp
+    src/Core.h 
+    src/Dbg.h 
+    src/Dbg.cpp
 )
+
+add_compile_definitions(ENGINE_EXPORT)
+add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
