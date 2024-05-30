@@ -20,7 +20,7 @@ namespace sntl
     {
         spdlog::set_pattern("[%10n] [%^%4!l%$] [%-20s:%5#] %v");
         logger_ = spdlog::stdout_color_mt("SENTINEL");
-        logger_->set_level(spdlog::level::trace);
+        logger_->set_level(spdlog::level::info);
     }
 
     Dbg::~Dbg()
