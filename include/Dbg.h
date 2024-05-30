@@ -9,7 +9,7 @@
 
 namespace sntl
 {
-    class Dbg
+    class ENGINE_API Dbg
     {
     public:
         static Dbg* getInstance();

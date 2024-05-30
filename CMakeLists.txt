@@ -3,10 +3,12 @@ project("Sentinel")
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_PATH})
+
 add_subdirectory(external/spdlog)
 
 set(SOURCES 
-    src/main.cpp
     src/Dbg.cpp
 )
 
@@ -23,5 +25,7 @@ add_library(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS})
 target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
                                                                   "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
-target_include_directories(${PROJECT_NAME} PRIVATE external/spdlog/include)
+target_include_directories(${PROJECT_NAME} PUBLIC external/spdlog/include)
 target_link_libraries(${PROJECT_NAME} PRIVATE spdlog)
+
+add_library(${PROJECT_NAME}::Sentinel ALIAS ${PROJECT_NAME})
