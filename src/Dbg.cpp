@@ -2,11 +2,9 @@
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
-
-namespace sntl
+namespace sntl 
 {
-    Dbg* Dbg::instance_;
+    Dbg* Dbg::instance_ = nullptr;
 
     Dbg* Dbg::getInstance()
     {
@@ -19,7 +17,7 @@ namespace sntl
     Dbg::Dbg()
     {
         spdlog::set_pattern("[%10n] [%^%4!l%$] [%-20s:%5#] %v");
-        logger_ = spdlog::stdout_color_mt("SENTINEL");
+        logger_ = spdlog::stdout_color_mt("Sentinel");
         logger_->set_level(spdlog::level::info);
     }
 
