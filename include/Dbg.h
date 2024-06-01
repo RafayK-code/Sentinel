@@ -28,9 +28,9 @@ namespace sntl
     };
 }
 
-#define DBG_INFO(...)    SPDLOG_LOGGER_INFO(sntl::Dbg::getInstance()->getLogger(), __VA_ARGS__);
-#define DBG_WARN(...)    SPDLOG_LOGGER_WARN(sntl::Dbg::getInstance()->getLogger(), __VA_ARGS__);
-#define DBG_ERROR(...)   SPDLOG_LOGGER_ERROR(sntl::Dbg::getInstance()->getLogger(), __VA_ARGS__);
-#define DBG_CRIT(...)    SPDLOG_LOGGER_CRITICAL(sntl::Dbg::getInstance()->getLogger(), __VA_ARGS__);
+#define DBG_INFO(...)    SPDLOG_LOGGER_INFO(sntl::Dbg::getInstance()->getLogger(), __VA_ARGS__)
+#define DBG_WARN(...)    SPDLOG_LOGGER_WARN(sntl::Dbg::getInstance()->getLogger(), __VA_ARGS__)
+#define DBG_ERROR(...)   SPDLOG_LOGGER_ERROR(sntl::Dbg::getInstance()->getLogger(), __VA_ARGS__)
+#define DBG_CRIT(...)    SPDLOG_LOGGER_CRITICAL(sntl::Dbg::getInstance()->getLogger(), __VA_ARGS__)
 
 #endif
