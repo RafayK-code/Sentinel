@@ -12,6 +12,9 @@
 
 namespace sntl
 {
+    template<typename... ComponentTypes>
+    class SceneView;
+
     class ENGINE_API Scene      //TODO: Add copy constructor to allow users to copy a scene (??? Should this even be allowed?)
     {
     public:
@@ -22,26 +25,48 @@ namespace sntl
         void destroyEntity(EntityID entity);
 
         template<typename T>
-        T& attachComponent(EntityID entity)
+        bool hasComponent(EntityID entity)
         {
-            static T defaultComponent = T();
-            ComponentID cID = getComponentID<T>();
-
             if (entities_[getEntityIndex(entity)].id != entity)
             {
                 DBG_WARN("Entity {0} is no longer valid", entity);
+                return false;
+            }
+
+            ComponentID cID = getComponentID<T>();
+            return entities_[getEntityIndex(entity)].signature.test(cID);
+        }
+
+        template<typename T>
+        T& attachComponent(EntityID entity)
+        {
+            static T defaultComponent = T();
+
+            if (entities_[getEntityIndex(entity)].id != entity)
+            {
+                DBG_WARN("Entity {0} is no longer valid. Returning dummy component", entity);
                 return defaultComponent;
             }
 
+            if (hasComponent<T>(entity))
+            {
+                DBG_WARN("Entity {0} already has component {1}. Returning dummy component", entity, typeid(T).name());
+                return defaultComponent;
+            }
+
+            ComponentID cID = getComponentID<T>();
+            
             if (componentPools_.size() <= cID)
             {
                 componentPools_.resize(cID + 1);
+                componentDestructors_.resize(cID + 1);
                 componentPools_[cID] = new ComponentPool(sizeof(T), maxEntities_);
+                componentDestructors_[cID] = [](void* component) { static_cast<T*>(component)->~T(); };
             }
 
-            T& component = *(new (componentPools_[cID]->get(entity)) T());
+            T& component = *(new (componentPools_[cID]->getChunk(getEntityIndex(entity))) T());
+            entities_[getEntityIndex(entity)].signature.set(cID);
 
-            entities_[entity].signature.set(cID);
             return component;
         }
 
@@ -49,21 +74,22 @@ namespace sntl
         T& getComponent(EntityID entity)
         {
             static T defaultComponent = T();
-            ComponentID cID = getComponentID<T>();
 
             if (entities_[getEntityIndex(entity)].id != entity)
             {
-                DBG_WARN("Entity {0} is no longer valid", entity);
+                DBG_WARN("Entity {0} is no longer valid. Returning dummy component", entity);
                 return defaultComponent;
             }
 
-            if (!entities_[entity].signature.test(cID))
+            ComponentID cID = getComponentID<T>();
+
+            if (!hasComponent<T>(entity))
             {
                 DBG_ERROR("Entity {0} does not have component {1}. Returning dummy component", entity, typeid(T).name());
                 return defaultComponent;
             }
 
-            T& component = *(static_cast<T*>(componentPools_[cID]->get(entity)));
+            T& component = *(static_cast<T*>(componentPools_[cID]->getChunk(getEntityIndex(entity))));
             return component;
         }
 
@@ -76,19 +102,41 @@ namespace sntl
                 return;
             }
 
+            if (!hasComponent<T>(entity))
+            {
+                DBG_WARN("Entity {0} does not have component {1}", entity, typeid(T).name());
+                return;
+            }
+
             ComponentID cID = getComponentID<T>();
-            entities_[entity].signature.reset(cID);
+            (static_cast<T*>(componentPools_[cID]->getChunk(getEntityIndex(entity))))->~T();
+            componentPools_[cID]->freeChunk(getEntityIndex(entity));
+
+            entities_[getEntityIndex(entity)].signature.reset(cID);
         }
+
+        template<typename T>
+        void testIter()
+        {
+            ComponentID cID = getComponentID<T>();
+            ComponentPool* c = componentPools_[cID];
+
+            for (const auto& v : *c)
+            {
+                DBG_INFO("It = {0}", v);
+            }
+        }
+
+    private:
+        using EntityIndex = uint32_t;
+        using EntityVersion = uint32_t;
+        using ComponentDestructor = std::function<void(void*)>;
 
         struct EntityDesc
         {
             EntityID id;
             ComponentSignature signature;
         };
-
-    private:
-        using EntityIndex = uint32_t;
-        using EntityVersion = uint32_t;
 
         EntityID createEntityId(EntityIndex index, EntityVersion version);
         EntityIndex getEntityIndex(EntityID entity);
@@ -100,6 +148,10 @@ namespace sntl
         std::vector<EntityDesc> entities_;
         std::vector<EntityIndex> freeEntities_;
         std::vector<ComponentPool*> componentPools_;
+        std::vector<ComponentDestructor> componentDestructors_;
+
+        template<typename... ComponentTypes>
+        friend class SceneView;
     };
 }
 

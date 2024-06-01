@@ -10,7 +10,7 @@ namespace sntl
     using ComponentID = uint8_t;
 
     constexpr ComponentID MAX_COMPONENTS = 32;
-    constexpr size_t ENGINE_MAX_ENTITIES = 10000;
+    constexpr size_t ENGINE_MAX_ENTITIES = 100000;
 
     using ComponentSignature = std::bitset<MAX_COMPONENTS>;
 

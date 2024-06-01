@@ -15,6 +15,19 @@ namespace sntl
 
     Scene::~Scene()
     {
+        for (EntityDesc e : entities_)
+        {
+            for (ComponentID cID = 0; cID < MAX_COMPONENTS; cID++)
+            {
+                if (e.signature.test(cID))
+                {
+                    EntityID entity = e.id;
+                    void* component = componentPools_[cID]->getChunk(getEntityIndex(entity));
+                    componentDestructors_[cID](component);
+                }
+            }
+        }
+
         for (ComponentPool* p : componentPools_)
             delete p;
     }
@@ -39,6 +52,17 @@ namespace sntl
     {
         EntityID newID = createEntityId(EntityIndex(-1), getEntityVersion(entity) + 1);
         entities_[getEntityIndex(entity)].id = newID;
+
+        for (ComponentID cID = 0; cID < MAX_COMPONENTS; cID++)
+        {
+            if (entities_[getEntityIndex(entity)].signature.test(cID))
+            {
+                void* component = componentPools_[cID]->getChunk(getEntityIndex(entity));
+                componentDestructors_[cID](component);
+                componentPools_[cID]->freeChunk(getEntityIndex(entity));
+            }
+        }
+
         entities_[getEntityIndex(entity)].signature.reset();
 
         freeEntities_.push_back(getEntityIndex(entity));
@@ -51,7 +75,7 @@ namespace sntl
 
     Scene::EntityIndex Scene::getEntityIndex(EntityID entity)
     {
-        return (EntityIndex)entity >> 32;
+        return entity >> 32;
     }
 
     Scene::EntityVersion Scene::getEntityVersion(EntityID entity)

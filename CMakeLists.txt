@@ -11,7 +11,6 @@ add_subdirectory(external/spdlog)
 set(SOURCES 
     src/Dbg.cpp
     src/ECS/Scene.cpp 
-    src/ECS/System.cpp 
     src/ECS/ComponentPool.cpp
     src/ECS/ComponentChunk.cpp
 )
@@ -21,10 +20,10 @@ set(HEADERS
     include/Dbg.h
     include/ECS/ECS.h
     include/ECS/Scene.h
-    include/ECS/System.h
     include/ECS/Types.h
     include/ECS/ComponentPool.h
     include/ECS/ComponentChunk.h
+    include/ECS/SceneView.h
 )
 
 add_compile_definitions(ENGINE_EXPORT)
