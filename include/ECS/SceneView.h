@@ -38,7 +38,7 @@ namespace sntl
         {
         public:
             SceneIterator(Scene* scene, ComponentPool* pool, ComponentSignature signature, bool all, ComponentPool::Iterator curr)
-                : scene_(scene), signature_(signature), all_(all), current_(curr), end_(pool->end())
+                : scene_(scene), pool_(pool), signature_(signature), all_(all), current_(curr), end_(pool->end())
             {
             }
 

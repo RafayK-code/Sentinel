@@ -29,7 +29,7 @@ namespace sntl
         {
             if (entities_[getEntityIndex(entity)].id != entity)
             {
-                DBG_WARN("Entity {0} is no longer valid", entity);
+                DBG_ERROR("Entity {0} is no longer valid", entity);
                 return false;
             }
 
@@ -44,14 +44,14 @@ namespace sntl
 
             if (entities_[getEntityIndex(entity)].id != entity)
             {
-                DBG_WARN("Entity {0} is no longer valid. Returning dummy component", entity);
+                DBG_ERROR("Entity {0} is no longer valid. Returning dummy component", entity);
                 return defaultComponent;
             }
 
             if (hasComponent<T>(entity))
             {
-                DBG_WARN("Entity {0} already has component {1}. Returning dummy component", entity, typeid(T).name());
-                return defaultComponent;
+                DBG_WARN("Entity {0} already has component {1}. Returning component instead", entity, typeid(T).name());
+                return getComponent<T>(entity);
             }
 
             ComponentID cID = getComponentID<T>();
@@ -77,7 +77,7 @@ namespace sntl
 
             if (entities_[getEntityIndex(entity)].id != entity)
             {
-                DBG_WARN("Entity {0} is no longer valid. Returning dummy component", entity);
+                DBG_ERROR("Entity {0} is no longer valid. Returning dummy component", entity);
                 return defaultComponent;
             }
 
@@ -98,13 +98,13 @@ namespace sntl
         {
             if (entities_[getEntityIndex(entity)].id != entity)
             {
-                DBG_WARN("Entity {0} is no longer valid", entity);
+                DBG_ERROR("Entity {0} is no longer valid", entity);
                 return;
             }
 
             if (!hasComponent<T>(entity))
             {
-                DBG_WARN("Entity {0} does not have component {1}", entity, typeid(T).name());
+                DBG_ERROR("Entity {0} does not have component {1}", entity, typeid(T).name());
                 return;
             }
 
@@ -113,18 +113,6 @@ namespace sntl
             componentPools_[cID]->freeChunk(getEntityIndex(entity));
 
             entities_[getEntityIndex(entity)].signature.reset(cID);
-        }
-
-        template<typename T>
-        void testIter()
-        {
-            ComponentID cID = getComponentID<T>();
-            ComponentPool* c = componentPools_[cID];
-
-            for (const auto& v : *c)
-            {
-                DBG_INFO("It = {0}", v);
-            }
         }
 
     private:
