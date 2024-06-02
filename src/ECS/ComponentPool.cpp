@@ -23,28 +23,10 @@ namespace sntl
 
     void ComponentPool::freeChunk(size_t index)
     {
-        denseSet_[sparseSet_[index]] = size_t(-1);
-        std::unordered_map<size_t, size_t> indexMap;
-
-        std::remove_if(chunks_.begin(), chunks_.end(), [&](const ComponentChunk& chunk) {
-            auto index = &chunk - &chunks_[0];
-
-            if (denseSet_[index] == size_t(-1))
-                return true;
-
-            indexMap[index] = indexMap.size();
-            return false;
-        });
-
-        auto logicalEnd = std::remove_if(denseSet_.begin(), denseSet_.end(), [&](size_t denseIndex) {
-            if (denseIndex == size_t(-1))
-                return true;
-
-            sparseSet_[denseIndex] = indexMap[denseIndex];
-            return false;
-        });
-
-        chunksEnd_ = logicalEnd - denseSet_.begin();
+        denseSet_[sparseSet_[index]] = denseSet_[chunksEnd_ - 1];
+        sparseSet_[denseSet_[chunksEnd_ - 1]] = sparseSet_[index];
+        sparseSet_[index] = -1;
+        chunksEnd_--;
     }
 
     void ComponentPool::addIndex(size_t index)
