@@ -37,8 +37,8 @@ namespace sntl
         class SceneIterator
         {
         public:
-            SceneIterator(Scene* scene, ComponentPool* pool, ComponentSignature signature, bool all, ComponentPool::Iterator curr)
-                : scene_(scene), pool_(pool), signature_(signature), all_(all), current_(curr), end_(pool->end())
+            SceneIterator(Scene* scene, ComponentPool* pool, ComponentSignature signature, bool all, std::vector<size_t>::const_iterator curr)
+                : scene_(scene), pool_(pool), signature_(signature), all_(all), current_(curr), end_(pool->getDenseChunks().end())
             {
             }
 
@@ -85,8 +85,8 @@ namespace sntl
 
             Scene* scene_;
             ComponentPool* pool_;
-            ComponentPool::Iterator current_;
-            ComponentPool::Iterator end_;
+            std::vector<size_t>::const_iterator current_;
+            std::vector<size_t>::const_iterator end_;
             ComponentSignature signature_;
             bool all_;
         };
@@ -95,12 +95,12 @@ namespace sntl
 
         Iterator begin()
         {
-            return Iterator(scene_, minComponentPool_, signature_, all_, minComponentPool_->begin());
+            return Iterator(scene_, minComponentPool_, signature_, all_, minComponentPool_->getDenseChunks().begin());
         }
 
         Iterator end()
         {
-            return Iterator(scene_, minComponentPool_, signature_, all_, minComponentPool_->end());
+            return Iterator(scene_, minComponentPool_, signature_, all_, minComponentPool_->getDenseChunks().end());
         }
 
     private:
