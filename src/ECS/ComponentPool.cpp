@@ -24,6 +24,7 @@ namespace sntl
     void ComponentPool::freeChunk(size_t index)
     {
         denseSet_[sparseSet_[index]] = denseSet_[chunksEnd_ - 1];
+        chunks_[sparseSet_[index]] = std::move(denseSet_[chunksEnd_ - 1]);
         sparseSet_[denseSet_[chunksEnd_ - 1]] = sparseSet_[index];
         sparseSet_[index] = -1;
         chunksEnd_--;
