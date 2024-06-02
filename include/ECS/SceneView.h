@@ -73,7 +73,7 @@ namespace sntl
         private:
             bool validIndex(Scene::EntityIndex index)
             {
-                return scene_->isEntityValid(scene_->entities_[index].id) && (all_ || signature_ == (signature_ & scene_->entities_[index].signature));
+                return (all_ || signature_ == (signature_ & scene_->entities_[index].signature));
             }
 
             void advance()

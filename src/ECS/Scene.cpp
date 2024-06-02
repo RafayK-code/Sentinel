@@ -59,7 +59,7 @@ namespace sntl
             {
                 void* component = componentPools_[cID]->getChunk(getEntityIndex(entity));
                 componentDestructors_[cID](component);
-                componentPools_[cID]->freeChunk(getEntityIndex(entity));
+                //componentPools_[cID]->freeChunk(getEntityIndex(entity));
             }
         }
 
