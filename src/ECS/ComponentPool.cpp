@@ -1,4 +1,4 @@
-#include "ECS/ComponentPool.h"
+#include "ecs/ComponentPool.h"
 
 #include <unordered_map>
 

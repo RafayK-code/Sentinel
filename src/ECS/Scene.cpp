@@ -1,5 +1,4 @@
-#include "ECS/Scene.h"
-#include "Dbg.h"
+#include "ecs/Scene.h"
 
 namespace sntl
 {

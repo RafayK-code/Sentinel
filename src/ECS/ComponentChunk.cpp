@@ -1,4 +1,4 @@
-#include "ECS/ComponentChunk.h"
+#include "ecs/ComponentChunk.h"
 
 namespace sntl
 {

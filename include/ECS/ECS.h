@@ -5,5 +5,6 @@
 #include "Scene.h"
 #include "Types.h"
 #include "SceneView.h"
+#include "System.h"
 
 #endif
