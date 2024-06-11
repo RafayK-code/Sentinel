@@ -35,21 +35,21 @@ namespace sntl
     {
         if (!freeEntities_.empty())
         {
-            EntityIndex newIndex = freeEntities_.back();
+            internal::EntityIndex newIndex = freeEntities_.back();
             freeEntities_.pop_back();
             EntityID newID = createEntityId(newIndex, getEntityVersion(entities_[newIndex].id));
             entities_[newIndex].id = newID;
             return newID;
         }
 
-        EntityID eID = createEntityId(EntityIndex(entities_.size()), 0);
+        EntityID eID = createEntityId(internal::EntityIndex(entities_.size()), 0);
         entities_.push_back({ eID, ComponentSignature() });
         return eID;
     }
 
     void Scene::destroyEntity(EntityID entity)
     {
-        EntityID newID = createEntityId(EntityIndex(-1), getEntityVersion(entity) + 1);
+        EntityID newID = createEntityId(internal::EntityIndex(-1), getEntityVersion(entity) + 1);
         entities_[getEntityIndex(entity)].id = newID;
 
         for (ComponentID cID = 0; cID < MAX_COMPONENTS; cID++)
@@ -67,23 +67,23 @@ namespace sntl
         freeEntities_.push_back(getEntityIndex(entity));
     }
 
-    EntityID Scene::createEntityId(Scene::EntityIndex index, Scene::EntityVersion version)
+    EntityID Scene::createEntityId(internal::EntityIndex index, internal::EntityVersion version)
     {
         return ((EntityID)index << 32) | (EntityID)version;
     }
 
-    Scene::EntityIndex Scene::getEntityIndex(EntityID entity)
+    internal::EntityIndex Scene::getEntityIndex(EntityID entity)
     {
         return entity >> 32;
     }
 
-    Scene::EntityVersion Scene::getEntityVersion(EntityID entity)
+    internal::EntityVersion Scene::getEntityVersion(EntityID entity)
     {
-        return (EntityVersion)entity;
+        return (internal::EntityVersion)entity;
     }
 
     bool Scene::isEntityValid(EntityID entity)
     {
-        return (entity >> 32) != EntityIndex(-1);
+        return (entity >> 32) != internal::EntityIndex(-1);
     }
 }

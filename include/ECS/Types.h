@@ -26,6 +26,12 @@ namespace sntl
         static ComponentID cID = getNewComponentID();
         return cID;
     }
+
+    namespace internal
+    {
+        using EntityIndex = uint32_t;
+        using EntityVersion = uint32_t;
+    }
 }
 
 #endif

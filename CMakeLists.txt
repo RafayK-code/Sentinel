@@ -26,10 +26,37 @@ file(GLOB SYS
     "${SNTL_SRC}/sys/*.cpp"
 )
 
+add_library(${PROJECT_NAME} SHARED ${CORE} ${ECS} ${SYS})
+
 add_compile_definitions(ENGINE_EXPORT)
 add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
 
-add_library(${PROJECT_NAME} SHARED ${CORE} ${ECS} ${SYS})
+target_compile_definitions(${PROJECT_NAME} PUBLIC 
+    $<$<CONFIG:Debug>:SNTL_DEBUG>
+    $<$<CONFIG:Release>:SNTL_RELEASE>
+    $<$<CONFIG:RelWithDebInfo>:SNTL_RELWITHDEBINFO>
+    $<$<CONFIG:MinSizeRel>:SNTL_MINSIZEREL>
+)
+
+option(ENABLE_LOGGING "Enable logging in all modes besides min size release" ON)
+option(FORCE_LOGGING "Enable logging in all modes" OFF)
+
+if(ENABLE_LOGGING)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC 
+        $<$<CONFIG:Debug>:SNTL_ENABLE_LOGGING>
+        $<$<CONFIG:Release>:SNTL_ENABLE_LOGGING>
+        $<$<CONFIG:RelWithDebInfo>:SNTL_ENABLE_LOGGING>
+    )
+endif()
+
+if(FORCE_LOGGING)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC 
+        $<$<CONFIG:Debug>:SNTL_ENABLE_LOGGING>
+        $<$<CONFIG:Release>:SNTL_ENABLE_LOGGING>
+        $<$<CONFIG:RelWithDebInfo>:SNTL_ENABLE_LOGGING>
+        $<$<CONFIG:MinSizeRel>:SNTL_ENABLE_LOGGING>
+    )
+endif()
 
 source_group("core" FILES ${CORE})
 source_group("ecs" FILES ${ECS})

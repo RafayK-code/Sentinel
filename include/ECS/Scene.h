@@ -13,7 +13,7 @@
 namespace sntl
 {
     template<typename... ComponentTypes>
-    class System;
+    class View;
 
     class ENGINE_API Scene      //TODO: Add copy constructor to allow users to copy a scene (??? Should this even be allowed?)
     {
@@ -115,9 +115,6 @@ namespace sntl
             entities_[getEntityIndex(entity)].signature.reset(cID);
         }
 
-        using EntityIndex = uint32_t;
-        using EntityVersion = uint32_t;
-
     private:
         using ComponentDestructor = std::function<void(void*)>;
 
@@ -127,20 +124,20 @@ namespace sntl
             ComponentSignature signature;
         };
 
-        EntityID createEntityId(EntityIndex index, EntityVersion version);
-        EntityIndex getEntityIndex(EntityID entity);
-        EntityVersion getEntityVersion(EntityID entity);
+        EntityID createEntityId(internal::EntityIndex index, internal::EntityVersion version);
+        internal::EntityIndex getEntityIndex(EntityID entity);
+        internal::EntityVersion getEntityVersion(EntityID entity);
         bool isEntityValid(EntityID entity);
 
         size_t maxEntities_;
 
         std::vector<EntityDesc> entities_;
-        std::vector<EntityIndex> freeEntities_;
+        std::vector<internal::EntityIndex> freeEntities_;
         std::vector<ComponentPool*> componentPools_;
         std::vector<ComponentDestructor> componentDestructors_;
 
         template<typename... ComponentTypes>
-        friend class System;
+        friend class View;
     };
 }
 
