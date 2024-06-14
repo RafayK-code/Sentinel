@@ -10,8 +10,8 @@
 #include <condition_variable>
 #include <future>
 
-#include "Core.h"
-#include "Dbg.h"
+#include "core/Core.h"
+#include "core/Dbg.h"
 
 namespace sntl
 {

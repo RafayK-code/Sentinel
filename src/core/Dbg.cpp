@@ -1,19 +1,9 @@
-#include "Dbg.h"
+#include "core/Dbg.h"
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 namespace sntl 
 {
-    Dbg* Dbg::instance_ = nullptr;
-
-    Dbg* Dbg::getInstance()
-    {
-        if (!instance_)
-            instance_ = new Dbg();
-
-        return instance_;
-    }
-
     Dbg::Dbg()
     {
         spdlog::set_pattern("[%10n] [%^%4!l%$] [%-20s:%5#] %v");
@@ -23,6 +13,15 @@ namespace sntl
 
     Dbg::~Dbg()
     {
-        delete instance_;
+    }
+
+    void initLogger()
+    {
+        Dbg::createSingleton();
+    }
+
+    void killLogger()
+    {
+        Dbg::killSingleton();
     }
 }

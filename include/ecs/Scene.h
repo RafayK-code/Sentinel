@@ -5,10 +5,10 @@
 #include <vector>
 #include <memory>
 
-#include "Core.h"
+#include "core/Core.h"
+#include "core/Dbg.h"
 #include "Types.h"
 #include "ComponentPool.h"
-#include "Dbg.h"
 
 namespace sntl
 {
@@ -17,6 +17,8 @@ namespace sntl
 
     class ENGINE_API Scene      //TODO: Add copy constructor to allow users to copy a scene (??? Should this even be allowed?)
     {
+        template<typename... ComponentTypes>
+        friend class View;
     public:
         Scene(size_t maxEntities);
         ~Scene();
@@ -135,9 +137,6 @@ namespace sntl
         std::vector<internal::EntityIndex> freeEntities_;
         std::vector<ComponentPool*> componentPools_;
         std::vector<ComponentDestructor> componentDestructors_;
-
-        template<typename... ComponentTypes>
-        friend class View;
     };
 }
 

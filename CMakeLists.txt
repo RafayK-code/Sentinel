@@ -12,8 +12,8 @@ set(SNTL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SNTL_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 file(GLOB CORE
-    "${SNTL_INCLUDE}/*.h"
-    "${SNTL_SRC}/*.cpp"
+    "${SNTL_INCLUDE}/core/*.h"
+    "${SNTL_SRC}/core/*.cpp"
 )
 
 file(GLOB ECS 
@@ -26,7 +26,12 @@ file(GLOB SYS
     "${SNTL_SRC}/sys/*.cpp"
 )
 
-add_library(${PROJECT_NAME} SHARED ${CORE} ${ECS} ${SYS})
+file(GLOB EVENTS
+    "${SNTL_INCLUDE}/events/*.h"
+    "${SNTL_SRC}/events/*.cpp"
+)
+
+add_library(${PROJECT_NAME} SHARED ${CORE} ${ECS} ${SYS} ${EVENTS})
 
 add_compile_definitions(ENGINE_EXPORT)
 add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
@@ -61,6 +66,7 @@ endif()
 source_group("core" FILES ${CORE})
 source_group("ecs" FILES ${ECS})
 source_group("sys" FILES ${SYS})
+source_group("events" FILES ${EVENTS})
 
 target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
                                                                   "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")

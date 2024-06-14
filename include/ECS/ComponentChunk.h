@@ -2,7 +2,7 @@
 #ifndef _COMPONENT_CHUNK
 #define _COMPONENT_CHUNK
 
-#include "Core.h"
+#include "core/Core.h"
 #include "Types.h"
 
 namespace sntl
