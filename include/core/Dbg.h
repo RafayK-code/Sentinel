@@ -40,6 +40,6 @@ namespace sntl
 #endif
 
 // For now, asserts are always active as it implies program is in an unrecoverable state
-#define DBG_ASSERT(cond, ...)  if(!cond) { SPDLOG_LOGGER_CRITICAL(sntl::Dbg::getInstance()->getLogger(), __VA_ARGS__); SNTL_BREAK; }
+#define DBG_ASSERT(cond, ...)  if(cond) {} else { SPDLOG_LOGGER_CRITICAL(sntl::Dbg::getInstance()->getLogger(), __VA_ARGS__); SNTL_BREAK; }
 
 #endif
