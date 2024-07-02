@@ -52,10 +52,10 @@ namespace sntl
         std::string getName() const override { return "KeyUpEvent"; }
     };
 
-    class KeyTyped : public KeyEvent
+    class KeyTypedEvent : public KeyEvent
     {
     public:
-        KeyTyped(KeyCode keycode)
+        KeyTypedEvent(KeyCode keycode)
             : KeyEvent(keycode)
         {
         }
