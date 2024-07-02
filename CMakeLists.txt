@@ -74,4 +74,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CUR
 target_include_directories(${PROJECT_NAME} PUBLIC external/spdlog/include)
 target_link_libraries(${PROJECT_NAME} PRIVATE spdlog)
 
+target_include_directories(${PROJECT_NAME} PUBLIC external/glfw/include)
+
 add_library(${PROJECT_NAME}::Sentinel ALIAS ${PROJECT_NAME})
