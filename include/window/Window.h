@@ -11,8 +11,6 @@ namespace sntl
         WINDOWED,
         BORDERLESS,
         FULLSCREEN,
-        WINDOWED_MAXIMIZED,
-        BORDERLESS_MAXIMIZED,
     };
 
     class Window : public EventDispatcher {

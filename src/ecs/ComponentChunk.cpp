@@ -1,5 +1,7 @@
 #include "ecs/ComponentChunk.h"
 
+#include <cstring>
+
 namespace sntl
 {
     ComponentChunk::ComponentChunk(size_t buffSize)

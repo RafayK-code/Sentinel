@@ -12,7 +12,7 @@ namespace sntl
     class ENGINE_API GlfwWindow : public Window
     {
     public:
-        GlfwWindow(const std::string& title, int xpos, int ypos, int width, int height, WindowType type = WindowType::WINDOWED);
+        GlfwWindow(const std::string& title, int xpos, int ypos, int width, int height, WindowType type = WindowType::WINDOWED, bool maximized = false);
         ~GlfwWindow();
 
         void onTick() override;
@@ -50,6 +50,7 @@ namespace sntl
         WindowData formerData_;
 
         bool vSync_;
+        bool maximized_;
 
         WindowType type_;
 

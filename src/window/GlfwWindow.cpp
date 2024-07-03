@@ -9,8 +9,8 @@ namespace sntl
 {
     static uint8_t windowCount = 0;
 
-    GlfwWindow::GlfwWindow(const std::string& title, int xpos, int ypos, int width, int height, WindowType windowType)
-        : data_({title, xpos, ypos, width, height, this}), type_(windowType), monitor_(nullptr)
+    GlfwWindow::GlfwWindow(const std::string& title, int xpos, int ypos, int width, int height, WindowType windowType, bool maximized)
+        : data_({title, xpos, ypos, width, height, this}), type_(windowType), monitor_(nullptr), maximized_(maximized)
     {
         initWindow();
     }
@@ -28,15 +28,13 @@ namespace sntl
         monitor_ = glfwGetPrimaryMonitor();
         DBG_ASSERT(monitor_, "Could not get primary monitor");
 
-        if (type_ == WindowType::FULLSCREEN)
+        if (type_ == WindowType::FULLSCREEN || type_ == WindowType::BORDERLESS)
         {
             const GLFWvidmode* mode = glfwGetVideoMode(monitor_);
-            window_ = glfwCreateWindow(mode->width, mode->height, data_.title.c_str(), monitor_, nullptr);
-            DBG_ASSERT(window_, "Could not create GLFW window");
 
             int monitorX, monitorY;
             glfwGetMonitorPos(monitor_, &monitorX, &monitorY);
-            
+
             formerData_.width = data_.width;
             formerData_.height = data_.height;
             formerData_.xpos = monitorX + (mode->width - data_.width) / 2;
@@ -46,33 +44,26 @@ namespace sntl
             data_.height = mode->height;
             data_.xpos = monitorX;
             data_.ypos = monitorY;
-        }
 
-        else
-        {
-            if (type_ == WindowType::WINDOWED_MAXIMIZED || type_ == WindowType::BORDERLESS_MAXIMIZED)
+            if (type_ == WindowType::BORDERLESS)
             {
-                const GLFWvidmode* mode = glfwGetVideoMode(monitor_);
-                int monitorX, monitorY;
-                glfwGetMonitorPos(monitor_, &monitorX, &monitorY);
-
-                data_.xpos = monitorX;
-                data_.ypos = monitorY;
-                data_.width = mode->width;
-                data_.height = mode->height;
-            }
-
-            if (type_ == WindowType::BORDERLESS || type_ == WindowType::BORDERLESS_MAXIMIZED)
                 glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
-            else 
-                glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
-
-            window_ = glfwCreateWindow(data_.width, data_.height, data_.title.c_str(), nullptr, nullptr);
-            glfwSetWindowPos(window_, data_.xpos, data_.ypos);
-            DBG_ASSERT(window_, "Could not create GLFW window");
+                data_.height++;     //stupid hack
+            }
         }
+
+        else 
+        {
+            glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+            glfwWindowHint(GLFW_MAXIMIZED, maximized_);
+        }
+
+        window_ = glfwCreateWindow(data_.width, data_.height, data_.title.c_str(), type_ == WindowType::FULLSCREEN ? monitor_ : nullptr, nullptr);
+        DBG_ASSERT(window_, "Could not create GLFW window");
 
         windowCount++;
+
+        glfwMakeContextCurrent(window_);
 
         glfwSetWindowUserPointer(window_, &data_);
         setVSync(true);
@@ -191,6 +182,11 @@ namespace sntl
             MouseScrolledEvent event((float)xOffset, (float)yOffset);
             data.curr->dispatchEvent(event);
         });
+
+        glfwSetWindowMaximizeCallback(window_, [](GLFWwindow* window, int maximized) {
+            WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+            data.curr->maximized_ = maximized;
+        });
     }
 
     void GlfwWindow::killWindow()
@@ -224,22 +220,27 @@ namespace sntl
         formerData_.width = data_.width;
         formerData_.height = data_.height;
 
-        if (type_ == WindowType::FULLSCREEN)
+        if (!monitor_)
         {
-            if (!monitor_)
-            {
-                monitor_ = glfwGetPrimaryMonitor();
-                DBG_ASSERT(monitor_, "Could not get primary monitor");
-            }
-
-            const GLFWvidmode* mode = glfwGetVideoMode(monitor_);
-            glfwSetWindowMonitor(window_, monitor_, 0, 0, mode->width, mode->height, mode->refreshRate);
+            monitor_ = glfwGetPrimaryMonitor();
+            DBG_ASSERT(monitor_, "Could not get primary monitor");
         }
 
-        else
+        const GLFWvidmode* mode = glfwGetVideoMode(monitor_);
+
+        switch (type_)
         {
-            bool enableDecorated = type_ == WindowType::WINDOWED;
-            glfwSetWindowAttrib(window_, GLFW_DECORATED, enableDecorated);
+        case WindowType::FULLSCREEN:
+            glfwSetWindowMonitor(window_, monitor_, 0, 0, mode->width, mode->height, mode->refreshRate);
+            break;
+        case WindowType::BORDERLESS:
+            glfwSetWindowAttrib(window_, GLFW_DECORATED, GLFW_FALSE);
+            glfwSetWindowAttrib(window_, GLFW_MAXIMIZED, GLFW_FALSE);
+            glfwSetWindowMonitor(window_, nullptr, 0, 0, mode->width, mode->height + 1, 0);
+            break;
+        case WindowType::WINDOWED:
+            glfwSetWindowAttrib(window_, GLFW_DECORATED, GLFW_TRUE);
+            glfwSetWindowAttrib(window_, GLFW_MAXIMIZED, maximized_);
             glfwSetWindowMonitor(window_, nullptr, formerData_.xpos, formerData_.ypos, formerData_.width, formerData_.height, 0);
         }
     }
