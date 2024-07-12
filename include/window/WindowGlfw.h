@@ -35,19 +35,17 @@ namespace sntl
     private:
         struct WindowData
         {
-            std::string title;
-
             int xpos;
             int ypos;
 
             int width;
             int height;
-
-            WindowGlfw* curr;
         };
 
         WindowData data_;
         WindowData formerData_;
+
+        std::string title_;
 
         bool vSync_;
         bool maximized_;
