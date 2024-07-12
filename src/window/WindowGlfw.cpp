@@ -1,4 +1,4 @@
-#include "window/GlfwWindow.h"
+#include "window/WindowGlfw.h"
 
 #include "core/Dbg.h"
 #include "events/WindowEvent.h"
@@ -9,18 +9,18 @@ namespace sntl
 {
     static uint8_t windowCount = 0;
 
-    GlfwWindow::GlfwWindow(const std::string& title, int xpos, int ypos, int width, int height, WindowType windowType, bool maximized)
+    WindowGlfw::WindowGlfw(const std::string& title, int xpos, int ypos, int width, int height, WindowType windowType, bool maximized)
         : data_({title, xpos, ypos, width, height, this}), type_(windowType), monitor_(nullptr), maximized_(maximized)
     {
         initWindow();
     }
 
-    GlfwWindow::~GlfwWindow()
+    WindowGlfw::~WindowGlfw()
     {
         killWindow();
     }
 
-    void GlfwWindow::initWindow()
+    void WindowGlfw::initWindow()
     {
         if (windowCount == 0)
             DBG_ASSERT(glfwInit(), "Could not initialize glfw");
@@ -189,7 +189,7 @@ namespace sntl
         });
     }
 
-    void GlfwWindow::killWindow()
+    void WindowGlfw::killWindow()
     {
         glfwDestroyWindow(window_);
         windowCount--;
@@ -198,7 +198,7 @@ namespace sntl
             glfwTerminate();
     }
 
-    void GlfwWindow::onTick()
+    void WindowGlfw::onTick()
     {
         glfwPollEvents();
 
@@ -206,12 +206,12 @@ namespace sntl
         glfwSwapBuffers(window_);
     }
 
-    void GlfwWindow::setVSync(bool enabled)
+    void WindowGlfw::setVSync(bool enabled)
     {
         glfwSwapInterval(enabled);
     }
 
-    void GlfwWindow::setWindowType(WindowType windowType)
+    void WindowGlfw::setWindowType(WindowType windowType)
     {
         type_ = windowType;
 
