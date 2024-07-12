@@ -62,6 +62,7 @@ namespace sntl
         DBG_ASSERT(window_, "Could not create GLFW window");
 
         windowCount++;
+        open_ = true;
 
         glfwMakeContextCurrent(window_);
 
@@ -73,6 +74,8 @@ namespace sntl
         glfwSetWindowCloseCallback(window_, [](GLFWwindow* window)
         {
             WindowGlfw* curr = static_cast<WindowGlfw*>(glfwGetWindowUserPointer(window));
+            curr->open_ = false;
+
             WindowCloseEvent event;
             curr->dispatchEvent(event);
         });
@@ -203,7 +206,7 @@ namespace sntl
     {
         glfwPollEvents();
 
-        // when we introduce renderer, this will probably go away
+        // when we introduce renderer, this will probably go away (at least it wont be handled here)
         glfwSwapBuffers(window_);
     }
 

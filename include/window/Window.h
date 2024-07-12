@@ -22,6 +22,11 @@ namespace sntl
         virtual int getWidth() const = 0;
         virtual int getHeight() const = 0;
 
+        virtual int getXPos() const = 0;
+        virtual int getYPos() const = 0;
+
+        virtual bool isOpen() const = 0;
+
         virtual bool isVSync() const = 0;
         virtual void setVSync(bool enabled) = 0;
         

@@ -20,6 +20,11 @@ namespace sntl
         int getWidth() const override { return data_.width; }
         int getHeight() const override { return data_.height; }
 
+        int getXPos() const override { return data_.xpos; }
+        int getYPos() const override { return data_.ypos; }
+
+        bool isOpen() const override { return open_; }
+
         bool isVSync() const override { return vSync_; }
         void setVSync(bool enabled) override;
 
@@ -49,6 +54,7 @@ namespace sntl
 
         bool vSync_;
         bool maximized_;
+        bool open_;
 
         WindowType type_;
 
