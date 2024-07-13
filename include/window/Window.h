@@ -13,9 +13,9 @@ namespace sntl
         FULLSCREEN,
     };
 
-    class Window : public EventDispatcher {
+    class IWindow : public EventDispatcher {
     public:
-        virtual ~Window() = default;
+        virtual ~IWindow() = default;
 
         virtual void onTick() = 0;
 

@@ -9,7 +9,7 @@
 
 namespace sntl
 {
-    class ENGINE_API WindowGlfw : public Window
+    class ENGINE_API WindowGlfw : public IWindow
     {
     public:
         WindowGlfw(const std::string& title, int xpos, int ypos, int width, int height, WindowType type = WindowType::WINDOWED, bool maximized = false);

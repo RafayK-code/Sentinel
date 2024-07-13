@@ -8,7 +8,10 @@
 
 namespace sntl
 {
-    constexpr int NUM_EVENTS = 14;
+    namespace 
+    { 
+        constexpr int NUM_EVENTS = 14; 
+    }
 
     enum EventType
     {
@@ -71,6 +74,7 @@ namespace sntl
             callbacks_[index1].erase(callbacks_[index1].begin() + index2);
         }
 
+    protected:
         template<typename E>
         void dispatchEvent(const E& e)
         {
