@@ -8,6 +8,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_PATH})
 
 add_subdirectory(external/spdlog)
 add_subdirectory(external/glfw)
+add_subdirectory(external/glad)
 
 set(SNTL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SNTL_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -83,5 +84,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE spdlog)
 
 target_include_directories(${PROJECT_NAME} PUBLIC external/glfw/include)
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
+
+target_include_directories(${PROJECT_NAME} PUBLIC external/glad/include)
+target_link_libraries(${PROJECT_NAME} PRIVATE glad)
 
 add_library(${PROJECT_NAME}::Sentinel ALIAS ${PROJECT_NAME})
