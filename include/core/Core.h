@@ -5,7 +5,7 @@
 #include <csignal>
 #include <cstdlib>
 
-#ifdef WIN32
+#if defined(WIN32) && defined(ENGINE_DLL)
     #ifdef ENGINE_EXPORT
         #define ENGINE_API __declspec(dllexport)
     #else 

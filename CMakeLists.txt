@@ -37,7 +37,7 @@ file(GLOB WINDOW
     "${SNTL_SRC}/window/*.cpp"
 )
 
-add_library(${PROJECT_NAME} SHARED ${CORE} ${ECS} ${SYS} ${EVENTS} ${WINDOW})
+add_library(${PROJECT_NAME} STATIC ${CORE} ${ECS} ${SYS} ${EVENTS} ${WINDOW})
 
 add_compile_definitions(ENGINE_EXPORT)
 add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
