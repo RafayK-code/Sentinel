@@ -10,7 +10,7 @@
 
 namespace sntl 
 {
-    class ENGINE_API Dbg : public Singleton<Dbg>
+    class SNTL_API Dbg : public Singleton<Dbg>
     {
         friend class Singleton<Dbg>;
     public:
@@ -23,8 +23,8 @@ namespace sntl
         std::shared_ptr<spdlog::logger> logger_;
     };
 
-    void ENGINE_API initLogger();
-    void ENGINE_API killLogger();
+    void SNTL_API initLogger();
+    void SNTL_API killLogger();
 }
 
 #ifdef SNTL_ENABLE_LOGGING

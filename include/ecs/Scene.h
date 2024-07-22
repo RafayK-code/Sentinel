@@ -15,7 +15,7 @@ namespace sntl
     template<typename... ComponentTypes>
     class View;
 
-    class ENGINE_API Scene      //TODO: Add copy constructor to allow users to copy a scene (??? Should this even be allowed?)
+    class SNTL_API Scene      //TODO: Add copy constructor to allow users to copy a scene (??? Should this even be allowed?)
     {
         template<typename... ComponentTypes>
         friend class View;

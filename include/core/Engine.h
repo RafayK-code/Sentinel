@@ -9,22 +9,18 @@
 
 namespace sntl
 {
-    class ENGINE_API Engine : public Singleton<Engine>
+    class SNTL_API Engine : public Singleton<Engine>, public EventDispatcher
     {
         friend class Singleton<Engine>;
     public:
         ~Engine() {}
 
-        EventDispatcher& getDispatcher() { return globalDispatcher_; };
-
     private:
         Engine() {}
-
-        EventDispatcher globalDispatcher_;
     };
 
-    void ENGINE_API initEngine();
-    void ENGINE_API killEngine();
+    void SNTL_API initEngine();
+    void SNTL_API killEngine();
 }
 
 #endif

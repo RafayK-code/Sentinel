@@ -7,7 +7,7 @@
 
 namespace sntl
 {
-    class ENGINE_API ComponentChunk
+    class SNTL_API ComponentChunk
     {
     public:
         ComponentChunk(size_t buffSize);
@@ -19,7 +19,7 @@ namespace sntl
         ComponentChunk(ComponentChunk&& other) noexcept;
         ComponentChunk& operator=(ComponentChunk&& other) noexcept;
 
-        void* get();
+        void* get() const;
 
     private:
         uint8_t* bytes_;

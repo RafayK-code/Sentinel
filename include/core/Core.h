@@ -5,19 +5,19 @@
 #include <csignal>
 #include <cstdlib>
 
-#if defined(WIN32) && defined(ENGINE_DLL)
-    #ifdef ENGINE_EXPORT
-        #define ENGINE_API __declspec(dllexport)
+#if defined(SNTL_PLATFORM_WINDOWS) && defined(SNTL_SHARED_LIB)
+    #ifdef SNTL_EXPORT
+        #define SNTL_API __declspec(dllexport)
     #else 
-        #define ENGINE_API __declspec(dllimport)
+        #define SNTL_API __declspec(dllimport)
     #endif
 #else
-    #define ENGINE_API
+    #define SNTL_API
 #endif
 
 namespace sntl
 {
-    void ENGINE_API killEngine();
+    void SNTL_API killEngine();
 
     inline void terminate(bool graceful)
     {
@@ -31,7 +31,7 @@ namespace sntl
     }
 }
 
-#ifdef WIN32
+#ifdef SNTL_PLATFORM_WINDOWS
     #ifdef SNTL_DEBUG
         #define SNTL_BREAK __debugbreak()
     #else

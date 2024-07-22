@@ -15,7 +15,7 @@
 
 namespace sntl
 {
-    class ENGINE_API ThreadPool
+    class SNTL_API ThreadPool
     {
     public:
         explicit ThreadPool(int numThreads = std::thread::hardware_concurrency());

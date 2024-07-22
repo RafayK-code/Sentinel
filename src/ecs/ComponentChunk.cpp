@@ -53,7 +53,7 @@ namespace sntl
         return *this;
     }
 
-    void* ComponentChunk::get()
+    void* ComponentChunk::get() const
     {
         return (void*)bytes_;
     }

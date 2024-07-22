@@ -38,9 +38,15 @@ file(GLOB WINDOW
     "${SNTL_SRC}/window/*.cpp"
 )
 
-add_library(${PROJECT_NAME} STATIC ${CORE} ${ECS} ${SYS} ${EVENTS} ${WINDOW})
+set(LIB_TYPE STATIC)
 
-add_compile_definitions(ENGINE_EXPORT)
+if(DEFINED SNTL_SHARED_LIB)
+    set(LIB_TYPE SHARED)
+endif()
+
+add_library(${PROJECT_NAME} ${LIB_TYPE} ${CORE} ${ECS} ${SYS} ${EVENTS} ${WINDOW})
+
+add_compile_definitions(SNTL_EXPORT)
 add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC 
@@ -48,6 +54,12 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
     $<$<CONFIG:Release>:SNTL_RELEASE>
     $<$<CONFIG:RelWithDebInfo>:SNTL_RELWITHDEBINFO>
     $<$<CONFIG:MinSizeRel>:SNTL_MINSIZEREL>
+)
+
+target_compile_definitions(${PROJECT_NAME} PUBLIC
+    $<$<PLATFORM_ID:Windows>:SNTL_PLATFORM_WINDOWS>
+    $<$<PLATFORM_ID:Darwin>:SNTL_PLATFORM_MAC>
+    $<$<PLATFORM_ID:Linux>:SNTL_PLATFORM_LINUX>
 )
 
 option(ENABLE_LOGGING "Enable logging in all modes besides min size release" ON)

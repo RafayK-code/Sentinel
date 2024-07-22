@@ -9,7 +9,7 @@
 
 namespace sntl
 {
-    class ENGINE_API ComponentPool
+    class SNTL_API ComponentPool
     {
     public:
         ComponentPool(size_t elementSize, size_t numElements);
@@ -18,9 +18,9 @@ namespace sntl
         void freeChunk(internal::EntityIndex index);
         void* getChunk(internal::EntityIndex index);
 
-        const std::vector<internal::EntityIndex>& getDenseChunks() { return denseSet_; }
+        const std::vector<internal::EntityIndex>& getDenseChunks() const { return denseSet_; }
 
-        size_t numChunks() { return chunksEnd_;  }
+        size_t numChunks() const { return chunksEnd_;  }
 
     private:
 

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _SYSTEM_H
-#define _SYSTEM_H
+#ifndef _VIEW_H
+#define _VIEW_H
 
 #include <functional>
 
@@ -74,7 +74,7 @@ namespace sntl
             }
 
         private:
-            bool validIndex(internal::EntityIndex index)
+            bool validIndex(internal::EntityIndex index) const
             {
                 return all_ || (signature_ == (signature_ & scene_.entities_[index].signature));
             }
@@ -101,7 +101,13 @@ namespace sntl
             return Iterator(scene_, minComponentPool_, signature_, all_, minComponentPool_->getDenseChunks().begin());
         }
 
-        void forEach(const std::function<void(Scene&, EntityID)>& f)
+
+        Iterator end()
+        {
+            return Iterator(scene_, minComponentPool_, signature_, all_, minComponentPool_->getDenseChunks().end());
+        }
+
+        void forEach(const std::function<void(Scene&, EntityID)>& f) const
         {
             const std::vector<internal::EntityIndex>& denseIds = minComponentPool_->getDenseChunks();
             for (size_t i = 0; i < denseIds.size(); i++)
@@ -114,7 +120,7 @@ namespace sntl
             }
         }
 
-        void forEach(const std::function<void(Scene&, EntityID)>& f, ThreadPool& pool, int numThreads)
+        void forEach(const std::function<void(Scene&, EntityID)>& f, ThreadPool& pool, int numThreads) const
         {
             const std::vector<internal::EntityIndex>& denseIds = minComponentPool_->getDenseChunks();
             size_t numElements = denseIds.size();
@@ -144,7 +150,7 @@ namespace sntl
         }
 
     private:
-        bool validIndex(internal::EntityIndex index)
+        bool validIndex(internal::EntityIndex index) const
         {
             return all_ || (signature_ == (signature_ & scene_.entities_[index].signature));
         }
