@@ -9,6 +9,7 @@
 #include "core/Dbg.h"
 #include "Types.h"
 #include "ComponentPool.h"
+#include "sys/ThreadUtil.h"
 
 namespace sntl
 {
@@ -29,6 +30,8 @@ namespace sntl
         template<typename T>
         bool hasComponent(EntityID entity)
         {
+            SNTL_SHARED_LOCK_SCOPE;
+
             if (entities_[getEntityIndex(entity)].id != entity)
             {
                 DBG_ERROR("Entity {0} is no longer valid", entity);
@@ -42,6 +45,8 @@ namespace sntl
         template<typename T>
         T& attachComponent(EntityID entity)
         {
+            SNTL_UNIQUE_LOCK_SCOPE;
+
             static T defaultComponent = T();
 
             if (entities_[getEntityIndex(entity)].id != entity)
@@ -50,11 +55,15 @@ namespace sntl
                 return defaultComponent;
             }
 
+            SNTL_UNIQUE_LOCK_UNLOCK;
+
             if (hasComponent<T>(entity))
             {
                 DBG_WARN("Entity {0} already has component {1}. Returning component instead", entity, typeid(T).name());
                 return getComponent<T>(entity);
             }
+
+            SNTL_UNIQUE_LOCK_LOCK;
 
             ComponentID cID = getComponentID<T>();
             
@@ -75,6 +84,8 @@ namespace sntl
         template<typename T>
         T& getComponent(EntityID entity)
         {
+            SNTL_SHARED_LOCK_SCOPE;
+
             static T defaultComponent = T();
 
             if (entities_[getEntityIndex(entity)].id != entity)
@@ -85,11 +96,15 @@ namespace sntl
 
             ComponentID cID = getComponentID<T>();
 
+            SNTL_SHARED_LOCK_UNLOCK;
+
             if (!hasComponent<T>(entity))
             {
                 DBG_ERROR("Entity {0} does not have component {1}. Returning dummy component", entity, typeid(T).name());
                 return defaultComponent;
             }
+
+            SNTL_SHARED_LOCK_LOCK;
 
             T& component = *(static_cast<T*>(componentPools_[cID]->getChunk(getEntityIndex(entity))));
             return component;
@@ -98,17 +113,23 @@ namespace sntl
         template<typename T>
         void removeComponent(EntityID entity)
         {
+            SNTL_UNIQUE_LOCK_SCOPE;
+
             if (entities_[getEntityIndex(entity)].id != entity)
             {
                 DBG_ERROR("Entity {0} is no longer valid", entity);
                 return;
             }
 
+            SNTL_UNIQUE_LOCK_UNLOCK;
+
             if (!hasComponent<T>(entity))
             {
                 DBG_ERROR("Entity {0} does not have component {1}", entity, typeid(T).name());
                 return;
             }
+
+            SNTL_UNIQUE_LOCK_LOCK;
 
             ComponentID cID = getComponentID<T>();
             (static_cast<T*>(componentPools_[cID]->getChunk(getEntityIndex(entity))))->~T();
@@ -137,6 +158,8 @@ namespace sntl
         std::vector<internal::EntityIndex> freeEntities_;
         std::vector<ComponentPool*> componentPools_;
         std::vector<ComponentDestructor> componentDestructors_;
+
+        SNTL_SHARED_MUTEX;
     };
 }
 

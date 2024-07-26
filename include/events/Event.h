@@ -69,7 +69,7 @@ namespace sntl
         void removeEventCallback(CallbackID callbackID)
         {
             std::uint32_t index1 = callbackID >> 32;
-            std::uint32_t index2 = callbackID;
+            std::uint32_t index2 = (std::uint32_t)callbackID;
 
             callbacks_[index1].erase(callbacks_[index1].begin() + index2);
         }

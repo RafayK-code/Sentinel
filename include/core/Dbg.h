@@ -3,7 +3,9 @@
 #define _DBG_H
 
 #include <spdlog/spdlog.h>
+#include <spdlog/fmt/fmt.h>
 #include <memory>
+#include <type_traits>
 
 #include "Core.h"
 #include "sys/Singleton.h"
@@ -41,5 +43,7 @@ namespace sntl
 
 // For now, asserts are always active as it implies program is in an unrecoverable state
 #define DBG_ASSERT(cond, ...)  if(cond) {} else { SPDLOG_LOGGER_CRITICAL(sntl::Dbg::getPtr()->getLogger(), __VA_ARGS__); SNTL_BREAK; }
+
+#define DBG_STATIC_ASSERT(cond, msg)  static_assert(cond, msg)
 
 #endif

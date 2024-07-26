@@ -58,6 +58,7 @@ namespace sntl
             {
                 void* component = componentPools_[cID]->getChunk(getEntityIndex(entity));
                 componentDestructors_[cID](component);
+                // free chunk is breaking. Look into this
                 componentPools_[cID]->freeChunk(getEntityIndex(entity));
             }
         }
