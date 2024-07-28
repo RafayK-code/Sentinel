@@ -4,6 +4,7 @@
 
 #include <csignal>
 #include <cstdlib>
+#include <memory>
 
 #if defined(SNTL_PLATFORM_WINDOWS) && defined(SNTL_SHARED_LIB)
     #ifdef SNTL_EXPORT
@@ -45,5 +46,26 @@ namespace sntl
         #define SNTL_BREAK sntl::terminate(true)
     #endif
 #endif
+
+namespace sntl
+{
+    template<typename T>
+    using ScopedPtr = std::unique_ptr<T>;
+
+    template<typename T, typename... Args>
+    constexpr ScopedPtr<T> makeScoped(Args&&... args)
+    {
+        return std::make_unique<T>(std::forward<Args>(args)...);
+    }
+
+    template<typename T>
+    using RefPtr = std::shared_ptr<T>;
+
+    template<typename T, typename... Args>
+    constexpr RefPtr<T> makeRef(Args&&... args)
+    {
+        return std::make_shared<T>(std::forward<Args>(args)...);
+    }
+}
 
 #endif

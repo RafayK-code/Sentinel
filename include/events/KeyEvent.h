@@ -3,7 +3,7 @@
 #define _KEY_EVENT_H
 
 #include "Event.h"
-#include "core/KeyCodes.h"
+#include "core/codes/KeyCodes.h"
 
 namespace sntl
 {

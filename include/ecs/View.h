@@ -7,7 +7,7 @@
 #include <type_traits>
 
 #include "Scene.h"
-#include "sys/thread/ThreadPool.h"
+#include "core/thread/ThreadPool.h"
 
 namespace sntl
 {

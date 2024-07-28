@@ -4,7 +4,7 @@
 
 #include "Core.h"
 #include "Dbg.h"
-#include "sys/Singleton.h"
+#include "Singleton.h"
 #include "events/Event.h"
 
 namespace sntl

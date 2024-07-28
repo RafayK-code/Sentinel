@@ -3,7 +3,7 @@
 #define _MOUSE_EVENT_H
 
 #include "Event.h"
-#include "core/MouseCodes.h"
+#include "core/codes/MouseCodes.h"
 
 namespace sntl
 {

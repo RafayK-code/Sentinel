@@ -34,6 +34,16 @@ add_library(${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES} ${INCLUDE_FILES})
 add_compile_definitions(SNTL_EXPORT)
 add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
 
+add_compile_definitions(SNTL_RENDERER_OPENGL=1)
+add_compile_definitions(SNTL_RENDERER_VULKAN=2)
+
+if (NOT DEFINED SNTL_RENDERER_API)
+    message("hi")
+    add_compile_definitions(SNTL_RENDERER_API=SNTL_RENDERER_OPENGL)
+else()
+    add_compile_definitions(SNTL_RENDERER_API=${SNTL_RENDERER_API})
+endif()
+
 target_compile_definitions(${PROJECT_NAME} PUBLIC 
     $<$<CONFIG:Debug>:SNTL_DEBUG>
     $<$<CONFIG:Release>:SNTL_RELEASE>

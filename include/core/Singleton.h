@@ -31,12 +31,12 @@ namespace sntl
             getHiddenPtr() = nullptr;
         }
 
-        inline static T* getPtr()
+        inline static T* ptr()
         {
             return getHiddenPtr();
         }
 
-        inline static T& getRef()
+        inline static T& ref()
         {
             return *getHiddenPtr();
         }
@@ -74,12 +74,12 @@ namespace sntl
         {
         }
 
-        inline static T* getPtr()
+        inline static T* ptr()
         {
             return &getHiddenPtr();
         }
 
-        inline static T& getRef()
+        inline static T& ref()
         {
             return getHiddenPtr();
         }
