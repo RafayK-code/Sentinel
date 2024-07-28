@@ -4,12 +4,12 @@
 
 #include <vector>
 #include <memory>
+#include <shared_mutex>
 
 #include "core/Core.h"
 #include "core/Dbg.h"
 #include "Types.h"
 #include "ComponentPool.h"
-#include "sys/ThreadUtil.h"
 
 namespace sntl
 {
@@ -30,8 +30,6 @@ namespace sntl
         template<typename T>
         bool hasComponent(EntityID entity)
         {
-            SNTL_SHARED_LOCK_SCOPE;
-
             if (entities_[getEntityIndex(entity)].id != entity)
             {
                 DBG_ERROR("Entity {0} is no longer valid", entity);
@@ -43,19 +41,13 @@ namespace sntl
         }
 
         template<typename T>
-        T& attachComponent(EntityID entity)
+        T* attachComponent(EntityID entity)
         {
-            SNTL_UNIQUE_LOCK_SCOPE;
-
-            static T defaultComponent = T();
-
             if (entities_[getEntityIndex(entity)].id != entity)
             {
-                DBG_ERROR("Entity {0} is no longer valid. Returning dummy component", entity);
-                return defaultComponent;
+                DBG_ERROR("Entity {0} is no longer valid", entity);
+                return nullptr;
             }
-
-            SNTL_UNIQUE_LOCK_UNLOCK;
 
             if (hasComponent<T>(entity))
             {
@@ -63,65 +55,54 @@ namespace sntl
                 return getComponent<T>(entity);
             }
 
-            SNTL_UNIQUE_LOCK_LOCK;
-
             ComponentID cID = getComponentID<T>();
             
             if (componentPools_.size() <= cID)
             {
+                std::unique_lock<std::shared_mutex> lock(mtx_);
+
                 componentPools_.resize(cID + 1);
                 componentDestructors_.resize(cID + 1);
                 componentPools_[cID] = new ComponentPool(sizeof(T), maxEntities_);
                 componentDestructors_[cID] = [](void* component) { static_cast<T*>(component)->~T(); };
             }
 
-            T& component = *(new (componentPools_[cID]->getChunk(getEntityIndex(entity))) T());
+            std::unique_lock<std::shared_mutex> lock(mtx_);
+            T* component = (new (componentPools_[cID]->getChunk(getEntityIndex(entity))) T());
             entities_[getEntityIndex(entity)].signature.set(cID);
 
             return component;
         }
 
         template<typename T>
-        T& getComponent(EntityID entity)
+        T* getComponent(EntityID entity)
         {
-            SNTL_SHARED_LOCK_SCOPE;
-
-            static T defaultComponent = T();
-
             if (entities_[getEntityIndex(entity)].id != entity)
             {
-                DBG_ERROR("Entity {0} is no longer valid. Returning dummy component", entity);
-                return defaultComponent;
+                DBG_ERROR("Entity {0} is no longer valid", entity);
+                return nullptr;
             }
 
             ComponentID cID = getComponentID<T>();
 
-            SNTL_SHARED_LOCK_UNLOCK;
-
             if (!hasComponent<T>(entity))
             {
-                DBG_ERROR("Entity {0} does not have component {1}. Returning dummy component", entity, typeid(T).name());
-                return defaultComponent;
+                DBG_ERROR("Entity {0} does not have component {1}", entity, typeid(T).name());
+                return nullptr;
             }
 
-            SNTL_SHARED_LOCK_LOCK;
-
-            T& component = *(static_cast<T*>(componentPools_[cID]->getChunk(getEntityIndex(entity))));
+            T* component = (static_cast<T*>(componentPools_[cID]->getChunk(getEntityIndex(entity))));
             return component;
         }
 
         template<typename T>
         void removeComponent(EntityID entity)
         {
-            SNTL_UNIQUE_LOCK_SCOPE;
-
             if (entities_[getEntityIndex(entity)].id != entity)
             {
                 DBG_ERROR("Entity {0} is no longer valid", entity);
                 return;
             }
-
-            SNTL_UNIQUE_LOCK_UNLOCK;
 
             if (!hasComponent<T>(entity))
             {
@@ -129,7 +110,7 @@ namespace sntl
                 return;
             }
 
-            SNTL_UNIQUE_LOCK_LOCK;
+            std::unique_lock<std::shared_mutex> lock(mtx_);
 
             ComponentID cID = getComponentID<T>();
             (static_cast<T*>(componentPools_[cID]->getChunk(getEntityIndex(entity))))->~T();
@@ -159,7 +140,7 @@ namespace sntl
         std::vector<ComponentPool*> componentPools_;
         std::vector<ComponentDestructor> componentDestructors_;
 
-        SNTL_SHARED_MUTEX;
+        std::shared_mutex mtx_;
     };
 }
 

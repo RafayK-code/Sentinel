@@ -21,6 +21,8 @@ namespace sntl
         explicit ThreadPool(int numThreads = std::thread::hardware_concurrency());
         ~ThreadPool();
 
+        int numThreads() const { return nThreads_; }
+
         template<typename F, typename... Args>
         auto enqueue(F&& f, Args&&... args) -> std::future<decltype(f(args...))>
         {

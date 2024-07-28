@@ -1,4 +1,4 @@
-#include "sys/ThreadPool.h"
+#include "sys/thread/ThreadPool.h"
 
 #if defined(SNTL_PLATFORM_WINDOWS)
 #include <Windows.h>

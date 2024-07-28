@@ -1,4 +1,4 @@
-#include "window/WindowGlfw.h"
+#include "window/glfw/WindowGlfw.h"
 
 #include "core/Dbg.h"
 #include "events/WindowEvent.h"

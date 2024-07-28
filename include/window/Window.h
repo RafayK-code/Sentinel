@@ -3,6 +3,7 @@
 #define _WINDOW_H
 
 #include "events/Event.h"
+#include "core/Core.h"
 
 namespace sntl
 {
@@ -35,6 +36,8 @@ namespace sntl
 
         virtual void* getNativePtr() const = 0;
     };
+
+    IWindow* SNTL_API createWindowGlfw(const std::string& title, int xpos, int ypos, int width, int height, WindowType type = WindowType::WINDOWED, bool maximized = false);
 }
 
 #endif

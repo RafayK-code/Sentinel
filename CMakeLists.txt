@@ -13,30 +13,15 @@ add_subdirectory(external/glad)
 set(SNTL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SNTL_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-file(GLOB CORE
-    "${SNTL_INCLUDE}/core/*.h"
-    "${SNTL_SRC}/core/*.cpp"
+file(GLOB_RECURSE SRC_FILES
+    "${SNTL_SRC}/*.cpp"
 )
 
-file(GLOB ECS 
-    "${SNTL_INCLUDE}/ecs/*.h"
-    "${SNTL_SRC}/ecs/*.cpp"
+file(GLOB_RECURSE INCLUDE_FILES
+    "${SNTL_INCLUDE}/*.h"
 )
 
-file(GLOB SYS
-    "${SNTL_INCLUDE}/sys/*.h"
-    "${SNTL_SRC}/sys/*.cpp"
-)
-
-file(GLOB EVENTS
-    "${SNTL_INCLUDE}/events/*.h"
-    "${SNTL_SRC}/events/*.cpp"
-)
-
-file(GLOB WINDOW
-    "${SNTL_INCLUDE}/window/*.h"
-    "${SNTL_SRC}/window/*.cpp"
-)
+include(cmake/source_group.cmake)
 
 set(LIB_TYPE STATIC)
 
@@ -44,7 +29,7 @@ if(DEFINED SNTL_SHARED_LIB)
     set(LIB_TYPE SHARED)
 endif()
 
-add_library(${PROJECT_NAME} ${LIB_TYPE} ${CORE} ${ECS} ${SYS} ${EVENTS} ${WINDOW})
+add_library(${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES} ${INCLUDE_FILES})
 
 add_compile_definitions(SNTL_EXPORT)
 add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
@@ -81,12 +66,6 @@ if(FORCE_LOGGING)
         $<$<CONFIG:MinSizeRel>:SNTL_ENABLE_LOGGING>
     )
 endif()
-
-source_group("core" FILES ${CORE})
-source_group("ecs" FILES ${ECS})
-source_group("sys" FILES ${SYS})
-source_group("events" FILES ${EVENTS})
-source_group("window" FILES ${WINDOW})
 
 target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
                                                                   "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")

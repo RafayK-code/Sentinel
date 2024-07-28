@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 
 #include "core/Core.h"
-#include "Window.h"
+#include "window/Window.h"
 
 namespace sntl
 {

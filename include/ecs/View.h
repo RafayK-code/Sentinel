@@ -7,7 +7,7 @@
 #include <type_traits>
 
 #include "Scene.h"
-#include "sys/ThreadPool.h"
+#include "sys/thread/ThreadPool.h"
 
 namespace sntl
 {
@@ -201,7 +201,6 @@ namespace sntl
                         internal::EntityIndex index = denseIds[j];
                         if (validIndex(index))
                         {
-                            SNTL_SHARED_LOCK_SCOPE;
                             f(entities[index].id);
                         }
                     }
@@ -224,8 +223,6 @@ namespace sntl
 
         ComponentPool* minComponentPool_;
         size_t minComponentPoolSize_;
-
-        SNTL_MUTABLE_SHARED_MUTEX;
 
         friend class Iterator;
     };
