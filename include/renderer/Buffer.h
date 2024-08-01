@@ -77,6 +77,8 @@ namespace sntl
         virtual void unbind() const = 0;
 
         virtual void setData(void* data, uint32_t size) = 0;
+
+        virtual const BufferLayout& getLayout() const = 0;
         virtual void setLayout(const BufferLayout& layout) = 0;
     };
 

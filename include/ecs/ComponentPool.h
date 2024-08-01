@@ -23,9 +23,9 @@ namespace sntl
         size_t numChunks() const { return chunksEnd_;  }
 
     private:
-
         void addIndex(internal::EntityIndex index);
 
+    private:
         std::vector<ComponentChunk> chunks_;
         std::vector<internal::EntityIndex> denseSet_;
         std::vector<internal::EntityIndex> sparseSet_;

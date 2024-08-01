@@ -133,6 +133,7 @@ namespace sntl
         internal::EntityVersion getEntityVersion(EntityID entity);
         bool isEntityValid(EntityID entity);
 
+    private:
         size_t maxEntities_;
 
         std::vector<EntityDesc> entities_;
