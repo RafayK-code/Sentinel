@@ -68,10 +68,10 @@ namespace sntl
         uint32_t stride_ = 0;
     };
 
-    class VertexBuffer
+    class IVertexBuffer
     {
     public:
-        virtual ~VertexBuffer() = default;
+        virtual ~IVertexBuffer() = default;
 
         virtual void bind() const = 0;
         virtual void unbind() const = 0;
@@ -82,10 +82,10 @@ namespace sntl
         virtual void setLayout(const BufferLayout& layout) = 0;
     };
 
-    class IndexBuffer
+    class IIndexBuffer
     {
     public:
-        virtual ~IndexBuffer() = default;
+        virtual ~IIndexBuffer() = default;
 
         virtual void bind() const = 0;
         virtual void unbind() const = 0;
@@ -93,10 +93,10 @@ namespace sntl
         virtual uint32_t getCount() const = 0;
     };
 
-    RefPtr<VertexBuffer> createVertexBuffer(uint32_t size);
-    RefPtr<VertexBuffer> createVertexBuffer(float* vertices, uint32_t size);
+    RefPtr<IVertexBuffer> createVertexBuffer(uint32_t size);
+    RefPtr<IVertexBuffer> createVertexBuffer(float* vertices, uint32_t size);
 
-    RefPtr<IndexBuffer> createIndexBuffer(uint32_t indices, uint32_t count);
+    RefPtr<IIndexBuffer> createIndexBuffer(uint32_t* indices, uint32_t count);
 }
 
 #endif

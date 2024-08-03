@@ -68,20 +68,37 @@ namespace sntl
 
 #if SNTL_RENDERER_API == SNTL_RENDERER_OPENGL
 
-    RefPtr<VertexBuffer> createVertexBuffer(uint32_t size)
+    RefPtr<IVertexBuffer> createVertexBuffer(uint32_t size)
     {
-        //return makeRef<VertexBufferOpenGL>();
+        return makeRef<VertexBufferOpenGL>(size);
+    }
+
+    RefPtr<IVertexBuffer> createVertexBuffer(float* vertices, uint32_t size)
+    {
+        return makeRef<VertexBufferOpenGL>(vertices, size);
+    }
+
+    RefPtr<IIndexBuffer> createIndexBuffer(uint32_t* indices, uint32_t count)
+    {
+        return makeRef<IndexBufferOpenGL>(indices, count);
+    }
+
+#else
+
+    RefPtr<IVertexBuffer> createVertexBuffer(uint32_t size)
+    {
         return nullptr;
     }
 
-    RefPtr<VertexBuffer> createVertexBuffer(float* vertices, uint32_t size)
+    RefPtr<IVertexBuffer> createVertexBuffer(float* vertices, uint32_t size)
     {
         return nullptr;
     }
 
-    RefPtr<IndexBuffer> createIndexBuffer(uint32_t indices, uint32_t count)
+    RefPtr<IIndexBuffer> createIndexBuffer(uint32_t* indices, uint32_t count)
     {
         return nullptr;
     }
+
 #endif
 }
