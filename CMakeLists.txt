@@ -38,7 +38,6 @@ add_compile_definitions(SNTL_RENDERER_OPENGL=1)
 add_compile_definitions(SNTL_RENDERER_VULKAN=2)
 
 if (NOT DEFINED SNTL_RENDERER_API)
-    message("hi")
     add_compile_definitions(SNTL_RENDERER_API=SNTL_RENDERER_OPENGL)
 else()
     add_compile_definitions(SNTL_RENDERER_API=${SNTL_RENDERER_API})
@@ -88,5 +87,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
 
 target_include_directories(${PROJECT_NAME} PUBLIC external/glad/include)
 target_link_libraries(${PROJECT_NAME} PRIVATE glad)
+
+target_include_directories(${PROJECT_NAME} PUBLIC external/glm)
 
 add_library(${PROJECT_NAME}::Sentinel ALIAS ${PROJECT_NAME})
