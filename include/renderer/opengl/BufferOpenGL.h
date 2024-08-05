@@ -6,7 +6,7 @@
 
 namespace sntl
 {
-    class VertexBufferOpenGL : public IVertexBuffer
+    class SNTL_API VertexBufferOpenGL : public IVertexBuffer
     {
     public:
         VertexBufferOpenGL(uint32_t size);
@@ -27,7 +27,7 @@ namespace sntl
         BufferLayout layout_;
     };
 
-    class IndexBufferOpenGL : public IIndexBuffer
+    class SNTL_API IndexBufferOpenGL : public IIndexBuffer
     {
     public:
         IndexBufferOpenGL(uint32_t* indices, uint32_t count);

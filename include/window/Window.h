@@ -16,7 +16,7 @@ namespace sntl
         FULLSCREEN,
     };
 
-    class IWindow : public EventDispatcher {
+    class SNTL_API IWindow : public EventDispatcher {
     public:
         virtual ~IWindow() = default;
 
@@ -37,9 +37,9 @@ namespace sntl
         virtual void setWindowType(WindowType windowType) = 0;
 
         virtual void* getNativePtr() const = 0;
-    };
 
-    RefPtr<IWindow> SNTL_API createWindowGlfw(const std::string& title, int xpos, int ypos, int width, int height, WindowType type = WindowType::WINDOWED, bool maximized = false);
+        static RefPtr<IWindow> create(const std::string& title, int xpos, int ypos, int width, int height, WindowType type = WindowType::WINDOWED, bool maximized = false);
+    };
 }
 
 #endif

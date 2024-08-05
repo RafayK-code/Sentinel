@@ -15,12 +15,15 @@ namespace sntl
     public:
         ~Engine() {}
 
+        static void init();
+        static void destroy();
+
     private:
         Engine() {}
     };
 
     void SNTL_API initEngine();
-    void SNTL_API killEngine();
+    void SNTL_API destroyEngine();
 }
 
 #endif

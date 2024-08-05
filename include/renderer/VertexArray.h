@@ -6,7 +6,7 @@
 
 namespace sntl
 {
-	class IVertexArray
+	class SNTL_API IVertexArray
 	{
 	public:
 		virtual ~IVertexArray() = default;
@@ -19,9 +19,9 @@ namespace sntl
 
 		virtual const std::vector<RefPtr<IVertexBuffer>>& getVertexBuffers() const = 0;
 		virtual const RefPtr<IIndexBuffer>& getIndexBuffer() const = 0;
-	};
 
-	RefPtr<IVertexArray> createVertexArray();
+		static RefPtr<IVertexArray> create();
+	};
 }
 
 #endif

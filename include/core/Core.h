@@ -18,13 +18,13 @@
 
 namespace sntl
 {
-    void SNTL_API killEngine();
+    void SNTL_API destroyEngine();
 
     inline void terminate(bool graceful)
     {
         if (graceful)
         {
-            killEngine();
+            destroyEngine();
             std::exit(-1);
         }
         
@@ -50,10 +50,10 @@ namespace sntl
 namespace sntl
 {
     template<typename T>
-    using ScopedPtr = std::unique_ptr<T>;
+    using ScopePtr = std::unique_ptr<T>;
 
     template<typename T, typename... Args>
-    constexpr ScopedPtr<T> makeScoped(Args&&... args)
+    constexpr ScopePtr<T> makeScope(Args&&... args)
     {
         return std::make_unique<T>(std::forward<Args>(args)...);
     }

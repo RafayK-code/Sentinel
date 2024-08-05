@@ -1,20 +1,19 @@
 #include "renderer/VertexArray.h"
 
+#include "core/Dbg.h"
+#include "renderer/opengl/VertexArrayOpenGL.h"
+#include "renderer/RendererPlatform.h"
+
 namespace sntl
 {
-#if SNTL_RENDERER_API == SNTL_RENDERER_OPENGL
-
-	RefPtr<IVertexArray> createVertexArray()
+	RefPtr<IVertexArray> IVertexArray::create()
 	{
-		return nullptr;
+        switch (RendererPlatform::ref().getPlatform())
+        {
+        case RendererPlatform::Platform::OpenGL: return makeRef<VertexArrayOpenGL>();
+        }
+
+        DBG_ASSERT(false, "Unrecognized renderer platform specified");
+        return nullptr;
 	}
-
-#else 
-
-	RefPtr<IVertexArray> createVertexArray()
-	{
-		return nullptr;
-	}
-
-#endif
 }

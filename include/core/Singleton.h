@@ -21,12 +21,12 @@ namespace sntl
             getHiddenPtr()->initStatics();
         }
 
-        static void killSingleton()
+        static void destroySingleton()
         {
             if (!getHiddenPtr())
                 return;
 
-            getHiddenPtr()->killStatics();
+            getHiddenPtr()->destroyStatics();
             delete getHiddenPtr();
             getHiddenPtr() = nullptr;
         }
@@ -45,7 +45,7 @@ namespace sntl
         {
         }
 
-        virtual void killStatics()
+        virtual void destroyStatics()
         {
         }
 
@@ -70,7 +70,7 @@ namespace sntl
         {
         }
 
-        static void killSingleton() 
+        static void destroySingleton() 
         {
         }
 

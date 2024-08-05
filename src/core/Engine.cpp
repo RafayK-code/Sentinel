@@ -2,15 +2,25 @@
 
 namespace sntl
 {
-    void initEngine()
+    void Engine::init()
     {
         Engine::createSingleton();
-        initLogger();
+        Dbg::init();
     }
 
-    void killEngine()
+    void Engine::destroy()
     {
-        killLogger();
-        Engine::killSingleton();
+        Dbg::destroy();
+        Engine::destroySingleton();
+    }
+
+    void initEngine()
+    {
+        Engine::init();
+    }
+
+    void destroyEngine()
+    {
+        Engine::destroy();
     }
 }

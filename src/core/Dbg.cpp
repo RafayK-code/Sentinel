@@ -15,13 +15,13 @@ namespace sntl
     {
     }
 
-    void initLogger()
+    void Dbg::init()
     {
         Dbg::createSingleton();
     }
 
-    void killLogger()
+    void Dbg::destroy()
     {
-        Dbg::killSingleton();
+        Dbg::destroySingleton();
     }
 }

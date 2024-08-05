@@ -6,7 +6,7 @@
 
 namespace sntl
 {
-	class VertexArrayOpenGL : public IVertexArray
+	class SNTL_API VertexArrayOpenGL : public IVertexArray
 	{
 	public:
 		VertexArrayOpenGL();

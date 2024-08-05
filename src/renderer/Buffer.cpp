@@ -2,6 +2,7 @@
 
 #include "core/Dbg.h"
 #include "renderer/opengl/BufferOpenGL.h"
+#include "renderer/RendererPlatform.h"
 
 namespace sntl
 {
@@ -66,39 +67,36 @@ namespace sntl
         }
     }
 
-#if SNTL_RENDERER_API == SNTL_RENDERER_OPENGL
-
-    RefPtr<IVertexBuffer> createVertexBuffer(uint32_t size)
+    RefPtr<IVertexBuffer> IVertexBuffer::create(uint32_t size)
     {
-        return makeRef<VertexBufferOpenGL>(size);
-    }
+        switch (RendererPlatform::ref().getPlatform())
+        {
+        case RendererPlatform::Platform::OpenGL: return makeRef<VertexBufferOpenGL>(size);
+        }
 
-    RefPtr<IVertexBuffer> createVertexBuffer(float* vertices, uint32_t size)
-    {
-        return makeRef<VertexBufferOpenGL>(vertices, size);
-    }
-
-    RefPtr<IIndexBuffer> createIndexBuffer(uint32_t* indices, uint32_t count)
-    {
-        return makeRef<IndexBufferOpenGL>(indices, count);
-    }
-
-#else
-
-    RefPtr<IVertexBuffer> createVertexBuffer(uint32_t size)
-    {
+        DBG_ASSERT(false, "Unrecognized renderer platform specified");
         return nullptr;
     }
 
-    RefPtr<IVertexBuffer> createVertexBuffer(float* vertices, uint32_t size)
+    RefPtr<IVertexBuffer> IVertexBuffer::create(float* vertices, uint32_t size)
     {
+        switch (RendererPlatform::ref().getPlatform())
+        {
+        case RendererPlatform::Platform::OpenGL: return makeRef<VertexBufferOpenGL>(vertices, size);
+        }
+
+        DBG_ASSERT(false, "Unrecognized renderer platform specified");
         return nullptr;
     }
 
-    RefPtr<IIndexBuffer> createIndexBuffer(uint32_t* indices, uint32_t count)
+    RefPtr<IIndexBuffer> IIndexBuffer::create(uint32_t* indices, uint32_t count)
     {
+        switch (RendererPlatform::ref().getPlatform())
+        {
+        case RendererPlatform::Platform::OpenGL: return makeRef<IndexBufferOpenGL>(indices, count);
+        }
+
+        DBG_ASSERT(false, "Unrecognized renderer platform specified");
         return nullptr;
     }
-
-#endif
 }

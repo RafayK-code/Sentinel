@@ -57,9 +57,7 @@ namespace sntl
             IEventCallback wrapper = [callback](const IEvent* e) 
             {
                 if (auto* event = dynamic_cast<const E*>(e))
-                {
                     callback(*event);
-                }
             };
 
             callbacks_[E::getStaticEventType()].push_back(wrapper);

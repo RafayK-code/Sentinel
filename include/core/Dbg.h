@@ -16,17 +16,18 @@ namespace sntl
     {
         friend class Singleton<Dbg>;
     public:
-        std::shared_ptr<spdlog::logger>& getLogger() { return logger_; }
         ~Dbg();
+
+        std::shared_ptr<spdlog::logger>& getLogger() { return logger_; }
+
+        static void init();
+        static void destroy();
 
     private:
         Dbg();
 
         std::shared_ptr<spdlog::logger> logger_;
     };
-
-    void SNTL_API initLogger();
-    void SNTL_API killLogger();
 }
 
 #ifdef SNTL_ENABLE_LOGGING

@@ -9,6 +9,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_PATH})
 add_subdirectory(external/spdlog)
 add_subdirectory(external/glfw)
 add_subdirectory(external/glad)
+add_subdirectory(external/glm)
 
 set(SNTL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SNTL_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -23,25 +24,22 @@ file(GLOB_RECURSE INCLUDE_FILES
 
 include(cmake/source_group.cmake)
 
+option(SNTL_SHARED_LIB "Build engine as a shared lib" OFF)
 set(LIB_TYPE STATIC)
 
-if(DEFINED SNTL_SHARED_LIB)
+if(SNTL_SHARED_LIB)
+
     set(LIB_TYPE SHARED)
 endif()
 
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES} ${INCLUDE_FILES})
 
-add_compile_definitions(SNTL_EXPORT)
-add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
-
-add_compile_definitions(SNTL_RENDERER_OPENGL=1)
-add_compile_definitions(SNTL_RENDERER_VULKAN=2)
-
-if (NOT DEFINED SNTL_RENDERER_API)
-    add_compile_definitions(SNTL_RENDERER_API=SNTL_RENDERER_OPENGL)
-else()
-    add_compile_definitions(SNTL_RENDERER_API=${SNTL_RENDERER_API})
+if(SNTL_SHARED_LIB)
+    add_compile_definitions(SNTL_EXPORT)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC SNTL_SHARED_LIB)
 endif()
+
+add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC 
     $<$<CONFIG:Debug>:SNTL_DEBUG>
